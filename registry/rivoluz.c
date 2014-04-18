@@ -39,7 +39,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define DEPLOYDIR "/home/simone/rivoluzionedigitale/registry"
+#define DEPLOYDIR "/usr/local/share/rivoluz/"
 #define LOGFILE "/var/lib/rivoluz/log.txt"
 #define UNPRIV_USER "_rivoluz"
 

@@ -32,6 +32,13 @@
 BINDIR=/usr/local/bin
 SYSCONFDIR=/etc/rivoluz
 DATADIR=/var/lib/rivoluz
+SRCDIR=/usr/local/share/rivoluz
+
+#
+# Create user _rivoluz
+#
+
+sudo adduser --disabled-password --disabled-login --force-badname _rivoluz
 
 #
 # BINDIR
@@ -90,8 +97,33 @@ echo "setup: create git repository into $DATADIR..."
     git init
     echo "{}" > .htpasswd
     git add .htpasswd
+    git config user.name "Root"
+    git config user.email "root@localhost"
     git commit -am 'Initial commit'
 )
 
 echo "setup: give $DATADIR ownership to _rivoluz:_rivoluz..."
 find $DATADIR -exec chown _rivoluz:_rivoluz {} \;
+
+#
+# SRCDIR
+#
+
+echo "setup: install into $SRCDIR..."
+
+install -d $SRCDIR
+install -d $SRCDIR/html
+
+for SCRIPT in backend.js frontend.js git.js index.js login.js login_once.js \
+  logout.js mailer.js private.js router.js server.js signup.js utils.js; do
+    install -m444 $SCRIPT $SRCDIR
+done
+install -m555 run.sh $SRCDIR
+
+for FILE in html/*.html; do
+    install -m444 $FILE $SRCDIR/html
+done
+
+for DEPENDENCY in csvtojson http-digest-auth nodemailer; do
+    npm install -g $DEPENDENCY
+done
