@@ -130,10 +130,11 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 
     <script type="text/javascript">
+        var matricola = "@MATRICOLA@";
         var URL = "^http(|s)://.*$";
         var regexp = {
-            "Name": "^[A-Za-z\\\'\\-\\s]+$",
-            "Surname": "^[A-Za-z\\\'\\-\\s]+$",
+            "Name": "^[\\sA-Za-z\\\'\\-]+$",
+            "Surname": "^[\\sA-Za-z\\\'\\-]+$",
             "Blog": URL,
             "Twitter": "^(|@[A-Za-z0-9_]{1,15})$",
             "WP": "^(U|u)tente:[^\\{\\}\\[\\]\\#\\|\\<]+)$",
@@ -142,43 +143,39 @@
             "Post2": URL,
             "Post3": URL
         };
+        var emptyMsg = {
+            "Blog": "Url blog non presente.",
+            "Twitter": "Account Twitter non presente.",
+            "WP": "Account Wikipedia non presente.",
+            "Video": "Url video non presente.",
+            "Post1": "Url del primo post non presente.",
+            "Post2": "Url del secondo post non presente.",
+            "Post3": "Url del terzo post non presente."
+        };
 
-        if ($("#zoneBlog").is(":empty")) {
-            document.getElementById("zoneBlog").innerHTML = "Url blog non presente.";
+        for (key in emptyMsg) {
+            if ((document.getElementById("zone"+key).innerHTML === "undefined") || ($("#zone"+key).is(":empty"))) {
+                document.getElementById("zone"+key).innerHTML = emptyMsg[key];
+            }
         }
-        if ($("#zoneTwitter").is(":empty")) {
-            document.getElementById("zoneTwitter").innerHTML = "Account Twitter non presente.";
-        }
-        if ($("#zoneWP").is(":empty")) {
-            document.getElementById("zoneWP").innerHTML = "Account Wikipedia non presente.";
-        }
-        if ($("#zoneVideo").is(":empty")) {
-            document.getElementById("zoneVideo").innerHTML = "Url video non presente.";
-        }
-        if ((document.getElementById("zonePost1").innerHTML === "undefined") || ($("#zonePost1").is(":empty"))) {
-            document.getElementById("zonePost1").innerHTML = "Url del primo post non presente.";
-        }
-        if ((document.getElementById("zonePost2").innerHTML === "undefined") || ($("#zonePost2").is(":empty"))){
-            document.getElementById("zonePost2").innerHTML = "Url del secondo post non presente.";
-        }
-        if ((document.getElementById("zonePost3").innerHTML === "undefined") || ($("#zonePost3").is(":empty"))){
-            document.getElementById("zonePost3").innerHTML = "Url del terzo post non presente.";
-        }
+
         function cancelForm(zone,id,nameid,num,memo) {
             document.getElementById(zone).innerHTML =
                 '&nbsp;<button onclick=\'openForm(\"'+zone+'\",\"'+id+'\",\"'+nameid+'\",\"'+num+'\")\'>Modifica</button>';
             document.getElementById("zone"+id).innerHTML = memo;
         }
+
         function openForm(zone,id,nameid,num) {
             var memo = document.getElementById("zone"+id).innerHTML;
+            var memoMod = memo.replace(/^/g, '"');
+            memoMod = memoMod.replace(/$/g, '"');
             document.getElementById(zone).innerHTML =
-                '<form id=' + id + ' method="post"><input type="text" name=' + nameid + ' id=' + nameid + ' value=' + document.getElementById("zone"+id).innerHTML + ' pattern=' + regexp[id] + ' size=' + num + '>&nbsp;<button onclick=\'cancelForm(\"' + zone + '\",\"' + id + '\",\"' + nameid + '\",\"' + num + '\",\"' + memo + '\")\'> Annulla </button>&nbsp;<input type="submit" value="Modifica"></form >';
+                '<form id=' + id + ' method="post"><input type="text" name=' + nameid + ' id=' + nameid + ' value=' + memoMod + ' pattern=' + regexp[id] + ' size=' + num + '>&nbsp;<button onclick=\'cancelForm(\"' + zone + '\",\"' + id + '\",\"' + nameid + '\",\"' + num + '\",\"' + memo + '\")\'> Annulla </button>&nbsp;<input type="submit" value="Modifica"></form >';
             document.getElementById("zone"+id).innerHTML = "";
         }
 
 
         $("#WP").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var wikipedia = $("#wp").val();
             $.ajax({
                 url: "/mod_sent",
@@ -203,7 +200,6 @@
 
 
         $("#Blog").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var blog = $("#blog").val();
             $.ajax({
                 url: "/mod_sent",
@@ -228,7 +224,6 @@
 
 
         $("#Twitter").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var twitter = $("#twitter").val();
             $.ajax({
                 url: "/mod_sent",
@@ -253,7 +248,6 @@
 
 
         $("#Video").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var video = $("#video").val();
             $.ajax({
                 url: "/mod_sent",
@@ -277,7 +271,6 @@
         });
 
         $("#Post1").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var post1 = $("#post1").val();
             $.ajax({
                 url: "/mod_sent",
@@ -301,7 +294,6 @@
         });
 
         $("#Post2").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var post2 = $("#post2").val();
             $.ajax({
                 url: "/mod_sent",
@@ -325,7 +317,6 @@
         });
 
         $("#Post3").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var post3 = $("#post3").val();
             $.ajax({
                 url: "/mod_sent",
@@ -349,7 +340,6 @@
         });
 
         $("#Name").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var nome = $("#name").val();
             $.ajax({
                 url: "/mod_sent",
@@ -373,7 +363,6 @@
         });
 
         $("#Surname").bind("submit", function (evt) {
-            var matricola = "@MATRICOLA@";
             var cognome = $("#surname").val();
             $.ajax({
                 url: "/mod_sent",
